@@ -22,4 +22,3 @@ export async function generateCertificate(data) {
   await browser.close();
   return { pdfPath, jpgPath };
 }
-

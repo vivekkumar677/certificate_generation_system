@@ -1,22 +1,31 @@
+
 import nodemailer from "nodemailer";
 
-export async function sendEmail(email, pdf, jpg) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS, // App Password
+  },
+});
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Your Certificate",
-    text: "Please find attached certificate.",
-    attachments: [
-      { path: pdf },
-      { path: jpg }
-    ]
+export async function sendEmail(to, pdfPath, jpgPath) {
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(
+      {
+        from: process.env.EMAIL_USER,
+        to,
+        subject: "Your Certificate",
+        text: "Please find your certificate attached.",
+        attachments: [
+          { filename: "certificate.pdf", path: pdfPath },
+          { filename: "certificate.jpg", path: jpgPath },
+        ],
+      },
+      (err, info) => {
+        if (err) return reject(err);
+        resolve(info);
+      }
+    );
   });
 }
