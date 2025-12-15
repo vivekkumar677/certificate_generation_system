@@ -5,6 +5,7 @@ import path from "path";
 export async function generateCertificate(data) {
   const html = fs.readFileSync("src/templates/certificate.html", "utf8")
     .replace("{{name}}", data.name)
+    .replace("{{email}}", data.email)
     .replace("{{business_name}}", data.business_name)
     .replace("{{gst_number}}", data.gst_number)
     .replace("{{business_address}}", data.business_address);

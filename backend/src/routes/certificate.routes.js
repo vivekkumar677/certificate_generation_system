@@ -9,34 +9,54 @@ router.post("/", async (req, res) => {
   try {
     const { name, email, gst_number, business_name, business_address } = req.body;
 
-    if (!name || !email || !gst_number || !business_name || !business_address)
+    // Validate input
+    if (!name || !email || !gst_number || !business_name || !business_address) {
       return res.status(400).json({ error: "All fields are required" });
+    }
 
-    // Insert into DB
+    // Insert into DB, prevent duplicates by email
     let insertResult;
     try {
       insertResult = await pool.query(
         `INSERT INTO certificates(name,email,gst_number,business_name,business_address)
-         VALUES($1,$2,$3,$4,$5) RETURNING id`,
+         VALUES($1,$2,$3,$4,$5)
+         ON CONFLICT (email) DO NOTHING
+         RETURNING id`,
         [name, email, gst_number, business_name, business_address]
       );
     } catch (dbErr) {
-      console.error("DB Error:", dbErr);
+      console.error("Database Error:", dbErr);
       return res.status(500).json({ error: "Database insert failed", details: dbErr.message });
     }
 
-    const certificateId = insertResult.rows[0].id;
+    const certificateId =
+      insertResult.rows.length > 0 ? insertResult.rows[0].id : null;
 
-    // Generate certificate
-    let pdfPath, jpgPath;
-    try {
-      ({ pdfPath, jpgPath } = await generateCertificate({ name, email, gst_number, business_name, business_address }));
-    } catch (certErr) {
-      console.error("Certificate Generation Error:", certErr);
-      return res.status(500).json({ error: "Certificate generation failed", details: certErr.message });
+    if (!certificateId) {
+      return res.status(200).json({
+        message: "Certificate already exists for this email",
+      });
     }
 
-    // Send email
+    // Generate certificate files
+    let pdfPath, jpgPath;
+    try {
+      ({ pdfPath, jpgPath } = await generateCertificate({
+        name,
+        email,
+        gst_number,
+        business_name,
+        business_address,
+      }));
+    } catch (certErr) {
+      console.error("Certificate Generation Error:", certErr);
+      return res.status(500).json({
+        error: "Certificate generation failed",
+        details: certErr.message,
+      });
+    }
+
+    // Send certificate via email
     try {
       await sendEmail(email, pdfPath, jpgPath);
     } catch (emailErr) {
