@@ -66,8 +66,11 @@ router.post("/", async (req, res) => {
 
     res.status(201).json({ message: "Certificate sent successfully", certificateId });
   } catch (err) {
-    console.error("Unexpected Error:", err);
-    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  console.error("Full backend error:", err);
+  res.status(500).json({
+    error: "Internal Server Error",
+    details: err.message || err.toString(),
+  });
   }
 });
 

@@ -14,8 +14,8 @@ export async function generateCertificate(data) {
   const page = await browser.newPage();
   await page.setContent(html);
 
-  const pdfPath = `cert_${Date.now()}.pdf`;
-  const jpgPath = `cert_${Date.now()}.jpg`;
+  const pdfPath = `/tmp/${Date.now()}_certificate.pdf`;
+  const jpgPath = `/tmp/${Date.now()}_certificate.jpg`;
 
   await page.pdf({ path: pdfPath, format: "A4" });
   await page.screenshot({ path: jpgPath, fullPage: true });
