@@ -1,25 +1,80 @@
+// import puppeteer from "puppeteer";
+// import fs from "fs";
+// import path from "path";
+// import { fileURLToPath } from "url";
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename); 
+
+// export async function generateCertificate(data) {
+
+//   const templatePath = path.join(
+//     __dirname,
+//     "../templates/certificate.html"
+//   );
+
+//   const html = fs.readFileSync(templatePath, "utf8")
+//     .replace("{{name}}", data.name)
+//     .replace("{{email}}", data.email)
+//     .replace("{{business_name}}", data.business_name)
+//     .replace("{{gst_number}}", data.gst_number)
+//     .replace("{{business_address}}", data.business_address);
+
+//   const browser = await puppeteer.launch({
+//     headless: "new",
+//     args: ["--no-sandbox", "--disable-setuid-sandbox"]
+//   });
+//   const page = await browser.newPage();
+//   await page.setContent(html, { waitUntil: "networkidle0" });
+
+//   const timestamp = Date.now();
+//   const pdfPath = `/tmp/${timestamp}_certificate.pdf`;
+//   const jpgPath = `/tmp/${timestamp}_certificate.jpg`;
+
+//   await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
+//   await page.screenshot({ path: jpgPath, fullPage: true });
+
+//   await browser.close();
+//   return { pdfPath, jpgPath };
+// }
+
+
 import puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+import os from "os";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const TMP_DIR = os.tmpdir();
 
 export async function generateCertificate(data) {
-  const html = fs.readFileSync("src/templates/certificate.html", "utf8")
+  const templatePath = path.join(__dirname, "../templates/certificate.html");
+
+  const html = fs.readFileSync(templatePath, "utf8")
     .replace("{{name}}", data.name)
     .replace("{{email}}", data.email)
     .replace("{{business_name}}", data.business_name)
     .replace("{{gst_number}}", data.gst_number)
     .replace("{{business_address}}", data.business_address);
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  });
+
   const page = await browser.newPage();
-  await page.setContent(html);
+  await page.setContent(html, { waitUntil: "networkidle0" });
 
-  const pdfPath = `/tmp/${Date.now()}_certificate.pdf`;
-  const jpgPath = `/tmp/${Date.now()}_certificate.jpg`;
+  const timestamp = Date.now();
+  const pdfPath = path.join(TMP_DIR, `${timestamp}_certificate.pdf`);
+  const jpgPath = path.join(TMP_DIR, `${timestamp}_certificate.jpg`);
 
-  await page.pdf({ path: pdfPath, format: "A4" });
+  await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
   await page.screenshot({ path: jpgPath, fullPage: true });
 
   await browser.close();
+
   return { pdfPath, jpgPath };
 }
