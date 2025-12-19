@@ -1,8 +1,9 @@
-import puppeteer from "puppeteer";
+import puppeteer, { executablePath } from "puppeteer";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import os from "os";
+import { exec } from "child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,11 +26,9 @@ export async function generateCertificate(data) {
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
     args: [
       "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--single-process"
-    ]
+      "--disable-setuid-sandbox"
+    ],
+    executablePath: "/user/bin/google-chrome"
   });
 
   const page = await browser.newPage();
