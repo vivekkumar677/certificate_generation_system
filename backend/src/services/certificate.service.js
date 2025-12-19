@@ -1,4 +1,3 @@
-
 import puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
@@ -12,16 +11,25 @@ const TMP_DIR = os.tmpdir();
 export async function generateCertificate(data) {
   const templatePath = path.join(__dirname, "../templates/certificate.html");
 
-  const html = fs.readFileSync(templatePath, "utf8")
+  const html = fs
+    .readFileSync(templatePath, "utf8")
     .replace("{{name}}", data.name)
     .replace("{{email}}", data.email)
     .replace("{{business_name}}", data.business_name)
     .replace("{{gst_number}}", data.gst_number)
     .replace("{{business_address}}", data.business_address);
 
+    // commenting this file for now
   const browser = await puppeteer.launch({
     headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+      "--single-process"
+    ]
   });
 
   const page = await browser.newPage();
