@@ -23,12 +23,10 @@ export async function generateCertificate(data) {
     // commenting this file for now
   const browser = await puppeteer.launch({
     headless: "new",
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox"
     ],
-    executablePath: "/user/bin/google-chrome"
   });
 
   const page = await browser.newPage();
