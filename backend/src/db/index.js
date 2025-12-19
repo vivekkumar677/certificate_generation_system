@@ -1,22 +1,16 @@
-import pkg from 'pg';
-const { Pool } = pkg;
-import dotenv from 'dotenv';
+// db/index.js
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 dotenv.config();
 
-const isProduction = process.env.NODE_ENV === "production";
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DATABASE_URL);
+    console.log("✅ MongoDB Connected");
+  } catch (err) {
+    console.error("❌ MongoDB Connection Failed:", err.message);
+    process.exit(1);
+  }
+};
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: isProduction
-    ? {
-        rejectUnauthorized: false
-    }
-    : false
-});
-
-pool.query("SELECT NOW()")
-  .then(res => console.log("✅ DB Connected:", res.rows[0]))
-  .catch(err => console.error("❌ DB Connection Failed:", err));
-
-
-export default pool;
+export default connectDB;

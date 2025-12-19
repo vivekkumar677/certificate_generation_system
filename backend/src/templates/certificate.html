@@ -1,31 +1,48 @@
+
 <!DOCTYPE html>
-<html>
-<meta charset="UTF-8">
-
+<html lang="en">
 <head>
-    <style>
-        body {
-            width: 1123px;
-            height: 794px;
-            border: 10px solid #0d6efd;
-            font-family: Arial;
-            text-align: center;
-            padding: 40px;
-        }
-
-        h1 {
-            color: #0d6efd;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Certificate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 800px;
+      margin: 0 auto;
+      padding: 50px;
+      border: 10px solid #4CAF50;
+      text-align: center;
+    }
+    h1 {
+      font-size: 50px;
+      color: #4CAF50;
+      margin-bottom: 0;
+    }
+    h2 {
+      font-size: 30px;
+      margin-top: 0;
+    }
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #000;
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Certificate of Registration</h1>
-    <p>This certifies that</p>
-    <h2>{{name}}</h2>
-    <p>Business: {{business_name}}</p>
-    <p>GST No: {{gst_number}}</p>
-    <p>Address: {{business_address}}</p>
+  <h1>Certificate of Completion</h1>
+  <h2>This is to certify that</h2>
+  <p class="highlight">{{name}}</p>
+  <p>has successfully completed the requirements for</p>
+  <p class="highlight">{{business_name}}</p>
+  <p>GST Number: <span class="highlight">{{gst_number}}</span></p>
+  <p>Business Address: <span class="highlight">{{business_address}}</span></p>
+  <p>Email: <span class="highlight">{{email}}</span></p>
+  <br><br>
+  <p>______________________</p>
+  <p>Authorized Signature</p>
 </body>
-
 </html>
