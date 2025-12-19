@@ -1,13 +1,22 @@
-import puppeteer, { executablePath } from "puppeteer";
+import puppeteer from "puppeteer-core";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import os from "os";
-import { exec } from "child_process";
+import { execSync } from "child_process";
+
+try {
+  console.log(execSync("which chromium").toString());
+  console.log(execSync("chromium --version").toString());
+} catch (e) {
+  console.error("❌ Chromium not found");
+}
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const TMP_DIR = os.tmpdir();
+
 
 export async function generateCertificate(data) {
   const templatePath = path.join(__dirname, "../templates/certificate.html");
@@ -22,10 +31,13 @@ export async function generateCertificate(data) {
 
     // commenting this file for now
   const browser = await puppeteer.launch({
-    headless: "new",
+    executablePath: "/usr/bin/chromium",
+    headless: true,
     args: [
       "--no-sandbox",
-      "--disable-setuid-sandbox"
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
     ],
   });
 
