@@ -1,9 +1,8 @@
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import os from "os";
-import { execSync } from "child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
