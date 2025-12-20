@@ -22,6 +22,7 @@ export async function generateCertificate(data) {
 
     // commenting this file for now
   const browser = await puppeteer.launch({
+    executablePath: puppeteer.executablePath(),
     headless: true,
     args: [
       "--no-sandbox",
@@ -30,6 +31,8 @@ export async function generateCertificate(data) {
       "--disable-gpu",
     ],
   });
+  console.log("Chrome path:", puppeteer.executablePath());
+
 
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
