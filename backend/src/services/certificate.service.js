@@ -134,7 +134,6 @@ export async function generateCertificate(data) {
   console.log("Using Chrome at:", chromePath);
 
   const browser = await puppeteer.launch({
-    executablePath: chromePath,
     headless: true,
     args: [
       "--no-sandbox",
