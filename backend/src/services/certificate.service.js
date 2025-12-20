@@ -132,25 +132,20 @@ export async function generateCertificate(data) {
 
   const browser = await puppeteer.launch({
     headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage"
-    ],
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
 
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
 
-  const pdfPath = path.join(TMP_DIR, `${Date.now()}_certificate.pdf`);
+  const timestamp = Date.now();
+  const pdfPath = path.join(TMP_DIR, `${timestamp}_certificate.pdf`);
+  const jpgPath = path.join(TMP_DIR, `${timestamp}_certificate.jpg`);
 
-  await page.pdf({
-    path: pdfPath,
-    format: "A4",
-    printBackground: true
-  });
+  await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
+  await page.screenshot({ path: jpgPath, fullPage: true });
 
   await browser.close();
 
-  return { pdfPath };
+  return { pdfPath, jpgPath };
 }
