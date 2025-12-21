@@ -114,7 +114,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import os from "os";
-import { launchBrowser } from "./launchBrowser.service";
+import { launchBrowser } from "./launchBrowser.service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
