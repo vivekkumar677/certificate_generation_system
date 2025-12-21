@@ -113,7 +113,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import os from "os";
-import { launchBrowser } from "./launchBrowser.service.js";
+import { getBrowser } from "./launchBrowser.service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -134,7 +134,7 @@ export async function generateCertificate(data) {
   //   headless: "new",
   //   args: ["--no-sandbox", "--disable-setuid-sandbox"]
   // });
-  const browser = await launchBrowser();
+  const browser = await getBrowser();
 
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
