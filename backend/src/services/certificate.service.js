@@ -114,6 +114,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import os from "os";
+import { launchBrowser } from "./launchBrowser.service";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -130,10 +131,11 @@ export async function generateCertificate(data) {
     .replace("{{gst_number}}", data.gst_number)
     .replace("{{business_address}}", data.business_address);
 
-  const browser = await puppeteer.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
-  });
+  // const browser = await puppeteer.launch({
+  //   headless: "new",
+  //   args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  // });
+  const browser = await launchBrowser();
 
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
