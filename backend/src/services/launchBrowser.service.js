@@ -1,16 +1,19 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 
 export const launchBrowser = async () => {
-  console.log("Using Chrome at:", process.env.PUPPETEER_EXECUTABLE_PATH);
+  console.log("Using Chrome at:", chromium.executablePath());
 
   return await puppeteer.launch({
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-    headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-    ],
+    executablePath: await chromium.executablePath(),
+    args: chromium.args,
+    headless: chromium.headless,
+    defaultViewport: chromium.defaultViewport,
+    // args: [
+    //   "--no-sandbox",
+    //   "--disable-setuid-sandbox",
+    //   "--disable-dev-shm-usage",
+    //   "--disable-gpu",
+    // ],
   });
 };
