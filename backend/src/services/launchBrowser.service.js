@@ -1,9 +1,11 @@
 import puppeteer from "puppeteer";
 
 export const launchBrowser = async () => {
-    console.log("Puppeteer executable:", puppeteer.executablePath());
-    const browser = await puppeteer.launch({
-    headless: true,
+  console.log("Using Chrome at:", process.env.PUPPETEER_EXECUTABLE_PATH);
+
+  return await puppeteer.launch({
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    headless: "new",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -11,5 +13,4 @@ export const launchBrowser = async () => {
       "--disable-gpu",
     ],
   });
-  return browser;
 };
